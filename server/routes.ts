@@ -19,7 +19,6 @@ companyRouter.post("/add-company", async (req: Request, res: Response) => {
 
 companyRouter.get("/get-companies", async (req: Request, res: Response) => {
   const companyList = await getAllCompanies();
-  // await deleteCompanies();
   console.log("GET COMPANIES", companyList);
   res.send(companyList).end();
 });

@@ -11,17 +11,14 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import type { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import styles from "../styles/Home.module.css";
+import config from "../config";
 
 const CompanyList: NextPage = () => {
   const [companyList, setCompanyList] = useState([]);
   const getAllCompanies = async () => {
-    const res = await axios.get("http://localhost:8003/api/v1/get-companies");
-    console.log(res.data);
+    const res = await axios.get(`${config.apiEndpoint}/get-companies`);
     setCompanyList(res.data);
   };
 

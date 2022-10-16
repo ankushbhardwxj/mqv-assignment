@@ -3,34 +3,31 @@ import { useState } from "react";
 import SearchPage from "../components/SearchPage";
 import axios from "axios";
 import { useRouter } from "next/router";
+import config from "../config";
+
+interface ICompanyListItem {
+  companyName: string;
+  cin: string;
+}
 
 const Home: NextPage = () => {
   const router = useRouter();
-  const [value, setValue] = useState<
-    string | { companyName: string; cin: string }
-  >("");
-  const [options, setOptions] = useState<Array<any>>([]);
+  const [value, setValue] = useState<string | ICompanyListItem>("");
+  const [options, setOptions] = useState<Array<ICompanyListItem>>([]);
 
   const handleSearchInput = async (e: any) => {
-    console.log("handle search input", e);
     if (!e) return;
     if (e.target.value === 0) return;
     setValue(e.target.value);
-    const res = await axios.post(
-      "http://localhost:8003/api/v1/query-companies",
-      {
-        query: value,
-      }
-    );
+    const res = await axios.post(`${config.apiEndpoint}/query-companies`, {
+      query: value,
+    });
     setOptions(res.data);
   };
 
-  const handleSelectInput = (e: any, selectedOption: any) => {
-    console.log("handle select input");
-    console.log(e, selectedOption);
-    console.log(options);
+  const handleSelectInput = (e: any, selectedOption: string) => {
     const companyName: string = selectedOption;
-    let cin;
+    let cin: string = "";
     for (let i = 0; i < options.length; i++) {
       if (options[i].companyName === companyName) {
         cin = options[i].cin;
@@ -41,11 +38,7 @@ const Home: NextPage = () => {
   };
 
   const handleSubmit = async () => {
-    const res = await axios.post(
-      "http://localhost:8003/api/v1/add-company",
-      value
-    );
-    console.log(res.data);
+    const res = await axios.post(`${config.apiEndpoint}/add-company`, value);
     setTimeout(() => {
       router.push("/companies");
     }, 500);
